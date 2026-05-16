@@ -1,0 +1,53 @@
+﻿@model DoManager.Models.ApplicationUser
+@{
+    ViewData["Title"] = "Керування користувачем";
+}
+
+<link rel="stylesheet" href="~/css/Admin(EditUser).css" />
+<div class="edit-user-page">
+    <h1 class="edit-title">Керування профілем</h1>
+
+    <div class="edit-card">
+        <form id="editUserForm">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <div class="form-group">
+                <label class="form-label">Повне ім'я користувача</label>
+                <input type="text" name="fullName" class="form-input" value="@Model.FullName" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email (Логін у системі)</label>
+                <input type="email" name="email" class="form-input" value="@Model.Email" required @(Model.Email == "admin@gmail.com" ? "readonly style='opacity:0.6; cursor:not-allowed;'" : "") />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Адміністративний статус</label>
+                @if (Model.Email == "admin@gmail.com")
+                {
+                    <input type="text" class="form-input" value="Активний (Головний Адмін)" readonly style="opacity: 0.6; cursor: not-allowed;" />
+                    <input type="hidden" name="userStatus" value="Active" />
+                }
+                else
+                {
+                    <select name="userStatus" class="form-input">
+                        <option value="Active" selected="@(Model.UserStatus == "Active")">Активний (Доступ дозволено)</option>
+                        <option value="Blocked" selected="@(Model.UserStatus == "Blocked")">Заблокований (Вхід заборонено)</option>
+                    </select>
+                }
+            </div>
+
+            <div class="buttons-row">
+                <a href="/Admin/Users" class="cancel-btn">Назад</a>
+                <button type="button" onclick="submitUserEdit()" class="save-btn">Зберегти</button>
+            </div>
+
+            <div id="statusMessage" class="status-message"></div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/admin-edituser.js"></script>
+}

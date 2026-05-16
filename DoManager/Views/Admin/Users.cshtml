@@ -1,0 +1,90 @@
+﻿@model IEnumerable<DoManager.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "Керування користувачами";
+}
+<link rel="stylesheet" href="~/css/Admin(Users).css" />
+
+<div class="users-container">
+    <div style="max-width: 1350px; margin: 20px auto 0; padding: 15px 20px;">
+        <a href="/Admin/Index" style="color: #a78bfa; text-decoration: none; font-weight: 700; font-size: 1.2rem; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s;"
+           onmouseover="this.style.color='#fff'; this.style.textShadow='0 0 15px #a78bfa'; this.style.transform='translateX(-3px)';"
+           onmouseout="this.style.color='#a78bfa'; this.style.textShadow='none'; this.style.transform='none';">
+            ← Назад до панелі адміна
+        </a>
+    </div>
+    <h1 class="users-title">Керування користувачами</h1>
+
+    <div class="table-responsive-wrapper">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Повне ім'я</th>
+                    <th>Email (Логін)</th>
+                    <th>Дата реєстрації</th>
+                    <th class="text-center-col">Статус</th>
+                    <th class="text-center-col" style="width: 320px;">Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr id="user-row-@user.Id">
+                        <td style="font-weight: 600;">@user.FullName</td>
+                        <td style="color: rgba(255,255,255,0.7);">@user.Email</td>
+                        <td>@user.RegisteredDate.ToString("dd.MM.yyyy HH:mm")</td>
+                        
+                        <td class="text-center-col">
+                            <span class="status-badge @(user.UserStatus == "Active" ? "status-active" : "status-blocked")">
+                                @(user.UserStatus == "Active" ? "Активний" : "Заблокований")
+                            </span>
+                        </td>
+                        <td class="text-center-col">
+                            <div class="actions-flex">
+                                <a asp-controller="Admin" asp-action="EditUser" asp-route-id="@user.Id" class="manage-btn">
+                                    Керувати
+                                </a>
+
+                                @if (user.Email != "admin@gmail.com")
+                                {
+                                    <button class="delete-user-btn" onclick="openDeleteModal('@user.Id', '@user.Email')">
+                                        Видалити
+                                    </button>
+                                }
+                                else
+                                {
+                                    <span class="main-admin-badge">Головний адмін</span>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade modal-backdrop-blur" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-box"> 
+            <div class="modal-body text-center pt-2 pb-2 px-0">
+                <h3 class="mb-3" style="font-weight: 600; letter-spacing: 0.5px;">Видалення користувача</h3>
+                <p style="font-size: 1.15rem; color: rgba(255, 255, 255, 0.8); line-height: 1.6;">
+                    Ви впевнені, що бажаєте назавжди видалити користувача <br />
+                    <strong id="modalUserEmail" style="color: #ff6b6b; font-weight: 700;"></strong>?<br />
+                    Цю дію неможливо буде скасувати.
+                </p>
+                
+                <div class="d-flex gap-3 justify-content-center mt-4">
+                    <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal">Скасувати</button>
+                    <button type="button" id="confirmDeleteBtn" class="btn btn-modal-delete">Видаляти</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="~/js/admin-users.js"></script>
+}

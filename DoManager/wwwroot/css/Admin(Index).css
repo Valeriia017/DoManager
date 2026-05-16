@@ -1,0 +1,91 @@
+﻿.admin-container {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.admin-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 50px;
+    text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* Стиль скляних карток */
+.admin-card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+    .admin-card:hover {
+        transform: translateY(-8px);
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(167, 139, 250, 0.4);
+        box-shadow: 0 25px 50px rgba(167, 139, 250, 0.15);
+    }
+
+.card-icon {
+    font-size: 3.5rem;
+    color: var(--purple-light);
+    margin-bottom: 20px;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.admin-card:hover .card-icon {
+    filter: drop-shadow(0 0 10px var(--purple-light));
+}
+
+.card-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 15px;
+}
+
+.card-text {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 35px;
+    line-height: 1.6;
+    padding: 14px;
+}
+
+/* Фіолетово-глянцева кнопка */
+.admin-btn {
+    background: linear-gradient(90deg, #7c3aed, #a78bfa);
+    color: white;
+    text-decoration: none;
+    padding: 14px 25px;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+    .admin-btn:hover {
+        color: white;
+        filter: brightness(1.1);
+        box-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+    }

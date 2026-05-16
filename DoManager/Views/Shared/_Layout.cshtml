@@ -1,0 +1,98 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using DoManager.Models
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List Manager</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header class="main-header">
+        <a href="/" class="logo">To-Do List Manager</a>
+        <div class="d-flex align-items-center gap-3">
+            @if (User.Identity.IsAuthenticated)
+            {
+                // 1. Отримуємо поточного користувача з бази даних
+                var currentUser = await UserManager.GetUserAsync(User);
+
+                // 2. Беремо його FullName (якщо імені немає - покаже Email)
+                var displayName = currentUser?.FullName ?? User.Identity.Name;
+
+                <span class="user-name-display d-none d-md-block">@displayName</span>
+
+                <div class="dropdown">
+                    <i class="bi bi-person-circle user-profile-icon" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;"></i>
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow">
+                        @{
+                            // Визначаємо, де саме зараз перебуває адмін
+                            var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                            var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+                            bool isProfilePage = (currentController == "Account" && currentAction == "Profile");
+                            bool isAdminArea = (currentController == "Admin");
+                        }
+
+                        @if (isAdminArea)
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-controller="Home" asp-action="Index">Головна сторінка</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Profile">Особистий кабінет</a>
+                            </li>
+                        }
+                        else if (isProfilePage)
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-controller="Home" asp-action="Index">Головна сторінка</a>
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li>
+                                    <a class="dropdown-item text-warning" href="/Admin/Index">Адмін панель</a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Profile">Особистий кабінет</a>
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li>
+                                    <a class="dropdown-item text-warning" href="/Admin/Index">Адмін панель</a>
+                                </li>
+                            }
+                        }
+
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger"
+                               asp-controller="Account"
+                               asp-action="Logout"
+                               onclick="window.location.href='/Account/Logout'; return true;">
+                                Вихід
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login"><i class="bi bi-person-circle user-profile-icon"></i></a>
+            }
+        </div>
+    </header>
+
+    <div class="container-fluid py-4">@RenderBody()</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

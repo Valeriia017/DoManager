@@ -1,0 +1,113 @@
+﻿@* Вказуємо, яку модель даних використовує ця сторінка (у нашому випадку це об'єкт користувача) *@
+@model DoManager.Models.ApplicationUser
+@{
+    // Встановлюємо заголовок сторінки, який буде відображатися на вкладці браузера
+    ViewData["Title"] = "Особистий кабінет";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/Account(Profile).css" />
+</head>
+<div class="profile-page">
+
+    <h1 class="page-title">Особистий кабінет</h1>
+
+    <div class="profile-card">
+        <div class="avatar">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4
+                7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6
+                1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+            </svg>
+        </div>
+
+        <div class="vertical-divider"></div>
+
+        <div class="profile-info">
+            <div class="profile-info__row"><strong>Повне ім'я:</strong> @Model.FullName</div>
+            <div class="profile-info__row"><strong>Пошта:</strong> @Model.Email</div>
+            <div class="profile-info__row">
+                <strong>Роль:</strong>
+                @if (User.IsInRole("Admin"))
+                {
+                    <span class="role-badge role-admin">Адміністратор</span>
+                }
+                else
+                {
+                    <span class="role-badge role-user">Користувач</span>
+                }
+            </div>
+            <div class="profile-info__row"><strong>Статус:</strong> @Model.UserStatus</div>
+            <div class="profile-info__row">
+                <strong>Зареєстрований:</strong> @Model.RegisteredDate.ToString("d.MM.yyyy")
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">Налаштування профілю</div>
+    <div class="section-desc">У цьому розділі налаштувань ви можете змінити дані вашого профілю</div>
+
+    <div class="settings-card">
+
+        <div class="field-group">
+            <div class="field-label">Повне ім'я</div>
+            <form id="updateNameForm" class="form-row">
+                @Html.AntiForgeryToken()
+                <input class="input" type="text" name="fullName" value="@Model.FullName" placeholder="Введіть ваше повне ім'я" />
+                <button type="button" onclick="submitNameChange()" class="btn btn--primary">Оновити</button>
+            </form>
+            <div id="nameStatusMessage" class="profile-inline-message"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field-group">
+            <div class="field-label">Email</div>
+            <div class="field-hint">Змінити ваш email</div>
+            <form id="updateEmailForm">
+                @Html.AntiForgeryToken()
+                <input class="input" style="max-width: 350px;" type="email" name="newEmail" value="@Model.Email" placeholder="Введіть ваш email" />
+                <div class="btn-row">
+                    <button type="button" onclick="submitEmailChange()" class="btn btn--primary">Оновити email</button>
+                    <button type="button" class="btn btn--secondary" onclick="verifyEmail()">Підтвердити пошту</button>
+                </div>
+            </form>
+
+            <div id="emailStatusMessage" class="profile-inline-message"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field-group">
+            <div class="field-label">Пароль</div>
+            <div class="field-hint" style="color: #B397D4;">Змінити пароль</div>
+            <form id="changePasswordForm">
+                @Html.AntiForgeryToken()
+                <div class="password-wrapper-profile">
+                    <input class="input" style="max-width: 350px; margin-bottom: 15px;" type="password" id="currentPass" name="currentPassword" placeholder="Поточний пароль" />
+                    <i class="bi bi-eye password-toggle-profile" onclick="togglePass('currentPass', this)"></i>
+                    <div id="error-currentPassword" class="profile-error-message"></div>
+                </div>
+                <div class="password-wrapper-profile">
+                    <input class="input" style="max-width: 350px; margin-bottom: 15px;" type="password" id="newPass" name="newPassword" placeholder="Новий пароль" />
+                    <i class="bi bi-eye password-toggle-profile" onclick="togglePass('newPass', this)"></i>
+                    <div id="error-newPassword" class="profile-error-message"></div>
+                </div>
+                <div class="password-wrapper-profile">
+                    <input class="input" style="max-width: 350px; margin-bottom: 15px;" type="password" id="confirmPass" name="confirmPassword" placeholder="Підтвердження пароля" />
+                    <i class="bi bi-eye password-toggle-profile" onclick="togglePass('confirmPass', this)"></i>
+                    <div id="error-confirmPassword" class="profile-error-message"></div>
+                </div>
+
+                <button type="button" onclick="submitPasswordChange()" class="btn btn--primary" style="margin-top: 5px;">Оновити пароль</button>
+
+                <div id="passwordSuccessAlert" class="profile-inline-message" style="color: #2ecc71;">
+                    Пароль успішно змінено!
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/account-profile.js"></script>
+}

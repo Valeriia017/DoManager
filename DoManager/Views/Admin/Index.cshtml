@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Панель адміністратора";
+}
+<link rel="stylesheet" href="~/css/Admin(Index).css" />
+<div class="admin-container">
+    <h1 class="admin-title">Панель адміністратора</h1>
+
+    <div class="admin-grid">
+        <div class="admin-card">
+            <div>
+                <i class="bi bi-people card-icon"></i>
+                <div class="card-name">Користувачі</div>
+                <p class="card-text">Керування користувачами та ролями</p>
+            </div>
+            <a href="/Admin/Users" class="admin-btn">Управління</a>
+        </div>
+
+        <div class="admin-card">
+            <div>
+                <i class="bi bi-journal-text card-icon"></i>
+                <div class="card-name">Журнал активності</div>
+                <p class="card-text">Моніторинг дій користувачів</p>
+            </div>
+            <a href="/Admin/Logs" class="admin-btn">Переглянути</a>
+        </div>
+
+        <div class="admin-card">
+            <div>
+                <i class="bi bi-bar-chart-line card-icon"></i>
+                <div class="card-name">Статистика завдань</div>
+                <p class="card-text">Загальна статистика завдань у системі</p>
+            </div>
+            <a href="/Admin/Statistics" class="admin-btn">Аналітика</a>
+        </div>
+    </div>
+</div>

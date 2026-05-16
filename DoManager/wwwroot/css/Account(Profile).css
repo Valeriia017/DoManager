@@ -1,0 +1,289 @@
+﻿/* :root - це глобальні змінні CSS. Зручно використовувати, щоб в одному місці міняти кольори для всього сайту */
+:root {
+    --bg-card: #7546AE4D; /* Фон для карток (профілю та налаштувань) */
+    --bg-input: #5D3292; /* Фон для полів вводу */
+    --bg-input-focus: #7843B8; /* Фон для поля вводу, коли на нього натиснули */
+    --border: #875ABE; /* Колір звичайних рамок */
+    --border-focus: #9E65E3; /* Колір рамки при виділенні (фокусі) */
+    --accent: #9E65E3; /* Головний фіолетовий колір (кнопки) */
+    --accent-soft: #E8D4FF; /* М'який фіолетовий для іконок та тексту */
+    --text-primary: #FFFFFF; /* Основний світлий колір тексту */
+    --text-secondary: #DEC3FF; /* Допоміжний текст (наприклад, підписи полів) */
+    --text-muted: #B397D4; /* Тьмяний текст для підказок */
+    --avatar-bg: #5b3aab; /* Фон кружечка аватарки */
+    /* Змінні для заокруглення кутів */
+    --radius-sm: 6px;
+    --radius-lg: 16px;
+    /* Змінні для тіней (створюють ефект глибини/об'єму) */
+    --shadow-card: 0 8px 32px rgba(0,0,0,0.45);
+    --shadow-btn: 0 2px 10px rgba(124,58,237,0.35);
+    /* Стандартний час анімації переходів */
+    --transition: 0.2s ease;
+}
+
+/* Головний контейнер сторінки. Обмежує ширину та центрує контент */
+.profile-page {
+    font-family: 'Segoe UI', sans-serif;
+    max-width: 920px; /* Максимальна ширина контенту */
+    margin: 0 auto; /* Центрування по горизонталі */
+    padding: 12px 20px 36px;
+    color: var(--text-primary);
+}
+
+/* Заголовок сторінки (H1) */
+.page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+
+/* --- ВЕРХНЯ КАРТКА ПРОФІЛЮ (Аватар + Інфо) --- */
+.profile-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px 37px;
+    display: flex; /* Розташовує елементи всередині в один рядок */
+    align-items: center; /* Центрує елементи по вертикалі */
+    gap: 38px; /* Відстань між аватаркою, лінією та текстом */
+    margin-bottom: 36px;
+    box-shadow: var(--shadow-card);
+}
+
+/* Кругла рамка для аватарки */
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%; /* Робить квадрат круглим */
+    background: var(--avatar-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Забороняє аватарці стискатися */
+    border: 2px solid var(--border-focus);
+}
+
+    /* Стиль для самої іконки (SVG) всередині аватарки */
+    .avatar svg {
+        width: 44px;
+        height: 44px;
+        fill: var(--accent-soft);
+        opacity: 0.85;
+    }
+
+/* Вертикальна лінія, що розділяє аватарку та інформацію */
+.vertical-divider {
+    width: 1px;
+    background: var(--border);
+    align-self: stretch; /* Розтягує лінію на всю доступну висоту батьківського блоку */
+    opacity: 0.7;
+}
+
+/* Контейнер для текстових рядків з інформацією */
+.profile-info {
+    display: flex;
+    flex-direction: column; /* Розташовує текст один під одним */
+    gap: 5px; /* Відстань між рядками тексту */
+}
+
+/* Окремий рядок інформації */
+.profile-info__row {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+    /* Робить назви полів жирними та білими */
+    .profile-info__row strong {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+/* --- КАРТКА НАЛАШТУВАНЬ (Нижня частина з формами) --- */
+.section-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.section-desc {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.settings-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px 50px 10px;
+    box-shadow: var(--shadow-card);
+}
+
+/* Група для кожного окремого налаштування */
+.field-group {
+    margin-bottom: 28px;
+}
+
+/* Заголовок над полем вводу */
+.field-label {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+/* підказка під заголовком поля */
+.field-hint {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+/* --- ФОРМИ ТА ЕЛЕМЕНТИ ВВОДУ --- */
+
+/* Клас для розташування інпуту та кнопки в один горизонтальний рядок */
+.form-row {
+    display: flex;
+    gap: 15px; /* Відстань між інпутом та кнопкою */
+    align-items: center; /* Вирівнювання по центру по вертикалі */
+    flex-wrap: wrap; /* Якщо екран малий, елементи перенесуться */
+}
+
+/* Базові стилі для ВСІХ полів вводу (текст, email, пароль) */
+.input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 1.1rem;
+    outline: none; /* Прибирає стандартну браузерну рамку при кліку */
+    transition: border-color var(--transition), background var(--transition);
+    display: block;
+}
+
+/* Специфічне правило: якщо інпут знаходиться в .form-row */
+.form-row .input {
+    max-width: 350px;
+    flex: 1; /* Дозволяє інпуту займати вільне місце */
+    margin-bottom: 0;
+}
+
+/* Ефекти при натисканні на поле вводу (світіння + колір) - ЗАЛИШЕНО ДЛЯ ПОЛІВ */
+.input:focus {
+    border-color: var(--border-focus);
+    background: var(--bg-input-focus);
+    box-shadow: 0 0 0 3px rgba(139,92,246,0.18);
+}
+
+/* --- КНОПКИ (Статичні, колір не змінюється) --- */
+
+/* Базові стилі для всіх кнопок */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    white-space: nowrap; /* Забороняє тексту в кнопці переноситися */
+    background: var(--accent) !important; /* Всі кнопки одного кольору */
+    color: #FFFFFF !important; /* Текст завжди білий */
+    box-shadow: var(--shadow-btn);
+    transition: none;
+}
+
+    /* Відключаємо зміну кольору при наведенні */
+    .btn:hover, .btn:active {
+        background: var(--accent) !important;
+        color: #FFFFFF !important;
+        transform: none;
+        box-shadow: var(--shadow-btn);
+    }
+
+.btn-row {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.divider {
+    height: 1px;
+    background: var(--border);
+    margin: 28px 0;
+    opacity: 0.5;
+}
+
+.alert {
+    padding: 11px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 1.1rem;
+    margin-bottom: 14px;
+}
+
+.alert--success {
+    background: rgba(72,187,120,0.15);
+    border: 1px solid rgba(72,187,120,0.35);
+    color: #9effc7;
+}
+
+/* Зміна кольору тексту-підказки (placeholder) тільки для полів пароля */
+input[type="password"].input::placeholder {
+    color: #B397D4; /* Тут змініть на свій колір */
+    opacity: 1; /* Щоб колір був чітким і не напівпрозорим */
+}
+
+/* СТИЛІ ДЛЯ ОКА ТА ПОМИЛОК У ПАРОЛЯХ */
+.password-wrapper-profile {
+    position: relative;
+    max-width: 350px;
+    margin-bottom: 0; /* Прибираємо марджин, бо він заданий в інпуті style="..." */
+}
+
+/* Іконка ока: збільшено розмір та СТАТИЧНИЙ колір */
+.password-toggle-profile {
+    position: absolute;
+    right: 15px; /* Трохи відсунули від краю */
+    top: 22px; 
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-muted); /* Тьмяно-фіолетовий */
+    font-size: 1.6rem; /*  РОЗМІР ОКА */
+    transition: none; /* Прибираємо будь-які анімації */
+    z-index: 5;
+}
+
+    /* ПРИ НАВЕДЕННІ ТА НАТИСКАННІ КОЛІР ОКА НЕ ЗМІНЮЄТЬСЯ */
+    .password-toggle-profile:hover, .password-toggle-profile:active {
+        color: var(--text-muted) !important; /* Колір залишається тмяно-фіолетовим */
+        transform: translateY(-50%)
+    }
+
+/* Стиль для повідомлення про неправильний пароль */
+.profile-error-message {
+    color: #ff6b6b; /* Червоний, як на логіні */
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: -10px; /* Щоб притиснути до інпуту, у якого margin-bottom: 15px */
+    margin-bottom: 15px;
+    display: none; /* Спочатку приховано */
+}
+/* Стиль для текстових повідомлень під полями (Ім'я та Email) */
+.profile-inline-message {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 10px;
+    display: none; /* Приховано за замовчуванням */
+}

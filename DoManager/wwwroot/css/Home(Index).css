@@ -1,0 +1,915 @@
+﻿/* ---- ГЛОБАЛЬНІ СТИЛІ ТА ФОН ---- */
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+    /* Використовуємо псевдоелемент, як у логіні */
+    body::before {
+        content: "";
+        position: fixed; /* Фіксуємо, щоб не рухався */
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        z-index: -1; /* КРИТИЧНО: відправляємо фон на задній план */
+        background: radial-gradient(circle at 20% 30%, #2d1b4e 0%, transparent 40%), radial-gradient(circle at 80% 70%, #3e1671 0%, transparent 40%), radial-gradient(circle at 50% 50%, #16162d 0%, transparent 100%);
+        pointer-events: none; /* Щоб фон не перехоплював кліки мишки */
+    }
+
+/* ---- КОНТЕЙНЕР ДЛЯ ВСІХ ДОШОК ---- */
+.kanban-wrapper {
+    display: flex;
+    gap: 58px; /* Відстань між колонками */
+    padding: 10px 45px 10px;
+    align-items: flex-start;
+    min-height: calc(100vh - 90px);
+    overflow-x: auto; /* Горизонтальний скрол, якщо колонок багато */
+    box-sizing: border-box;
+    flex-wrap: wrap;
+}
+
+/* ---- ОКРЕМА КОЛОНКА ---- */
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    min-width: 270px; /* Мінімальна ширина колонки */
+    flex: 1; /* Колонки рівномірно ділять вільний простір */
+}
+
+/* Заголовок колонки (напр. "В ПРОЦЕСІ") */
+.column-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+    color: #DEC3FF;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Зона скролу всередині колонки (щоб скролилися лише картки, а не вся сторінка) */
+.boards-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+    overflow-y: visible;
+    padding-bottom: 12px;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(212,177,255,0.3) transparent;
+}
+
+/* ---- ДОШКА (СПИСОК) ---- */
+.board {
+    background: #7546AE; /* Основний фіолетовий колір дошки */
+    border-radius: 16px;
+    width: 420px; /* Ширина дошки */
+    min-height: 100px; /* Мінімальна висота */
+    padding: 12px 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease;
+    flex-shrink: 0;
+}
+
+    /* Підсвітка дошки, коли над нею перетягують картку */
+    .board.drag-over {
+        box-shadow: 0 0 0 2px #D4B1FF, 0 0 20px rgba(212,177,255,0.3);
+    }
+
+/* Шапка дошки (Назва + Кнопки дій) */
+.board-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+/* Редагована назва дошки */
+.board-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 2px 5px;
+    border-radius: 5px;
+    width: calc(100% - 60px);
+    cursor: pointer;
+    transition: box-shadow 0.15s ease;
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
+}
+
+    .board-name:focus {
+        box-shadow: 0 2px 0 0 #D4B1FF;
+        cursor: text;
+    }
+
+/* Кнопки дій дошки (+ та Видалити) */
+.board-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.add-board-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid #D4B1FF;
+    color: #D4B1FF;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.18s;
+    padding: 0;
+    line-height: 1;
+}
+
+    .add-board-btn:hover {
+        background: #9E65E3;
+        border-color: #9E65E3;
+        color: #fff;
+    }
+
+.delete-board-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+
+    .delete-board-btn:hover {
+        color: #ff6b6b;
+        transform: scale(1.1);
+    }
+
+/* ---- ПОЛЕ ВВОДУ НОВОГО ЗАВДАННЯ ---- */
+.task-input-wrap {
+    display: none;
+}
+
+    .task-input-wrap.visible {
+        display: block;
+    }
+
+.task-input {
+    width: 100%;
+    background: #5D3292;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 9px;
+    color: #fff;
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    outline: none;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+    transition: border-color 0.15s;
+}
+
+    .task-input:focus {
+        border-color: #9E65E3;
+    }
+
+    .task-input::placeholder {
+        color: rgba(255, 255, 255, 0.65);
+    }
+
+/* Кнопка "Додати завдання" */
+.add-task-btn {
+    background: transparent;
+    border: 1.5px solid #D4B1FF;
+    border-radius: 9px;
+    color: #EBEBEB;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 7px 10px;
+    text-align: center;
+    width: 100%;
+    transition: all 0.15s;
+    font-family: 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+}
+
+    .add-task-btn:hover {
+        border-color: #9E65E3;
+        background: #9E65E3;
+    }
+
+/* ---- КАРТКА ЗАВДАННЯ ---- */
+.task-item {
+    border-radius: 10px;
+    padding: 9px 10px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer; /* Картка повністю клікабельна */
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    transition: transform 0.1s, filter 0.15s;
+    user-select: none;
+    min-height: 38px;
+    touch-action: none; /* Заборона дефолтних свайпів для мобільного drag-n-drop */
+}
+
+    .task-item:active {
+        cursor: grabbing;
+    }
+
+    .task-item.dragging {
+        opacity: 0.4;
+        transform: scale(0.97);
+    }
+
+/* Кругла галочка виконання (ховається до наведення) */
+.task-check-wrap {
+    width: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: width 0.22s, opacity 0.22s;
+    flex-shrink: 0;
+    order: -1;
+}
+
+.task-item:hover .task-check-wrap {
+    width: 28px;
+    opacity: 1;
+}
+
+.task-check-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.75);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    color: transparent;
+    font-size: 0.7rem;
+    padding: 0;
+    line-height: 1;
+}
+
+    .task-check-btn.checked {
+        background: rgba(255,255,255,0.3);
+        border-color: #fff;
+        color: #fff;
+    }
+
+.task-name-span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+}
+
+/* Хрестик швидкого видалення картки */
+.task-delete-quick {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 0 4px;
+    opacity: 0;
+    transition: opacity 0.2s, color 0.15s;
+}
+
+.task-item:hover .task-delete-quick {
+    opacity: 1;
+}
+
+.task-delete-quick:hover {
+    color: #BF0000;
+    transform: scale(1.25);
+}
+
+/* ---- КОЛОНКА ПЛАНУ ---- */
+.column-plan {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    min-width: 180px;
+    flex-shrink: 0;
+    height: 100%;
+}
+
+.board-plan {
+    background: #7546AE;
+    border-radius: 16px;
+    width: 400px;
+    min-height: 70px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.add-plan-btn {
+    background: transparent;
+    border: 1.5px solid #D4B1FF;
+    border-radius: 9px;
+    color: #EBEBEB;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 7px 6px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: all 0.15s;
+}
+
+    .add-plan-btn:hover {
+        border-color: #9E65E3;
+        background: #9E65E3;
+    }
+
+.plan-block {
+    background: rgba(255,255,255,0.14);
+    border-radius: 9px;
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    text-align: left;
+    color: #EBEBEB;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: stretch; /* stretch змушує внутрішні блоки мати однакову висоту */
+    gap: 0px;
+}
+
+    .plan-block:hover {
+        background: rgba(255,255,255,0.24);
+    }
+
+    .plan-block .plan-time {
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.2rem;
+        display: inline;
+        margin-bottom: 4px;
+        white-space: nowrap; /* Час завжди в один рядок */
+        flex-shrink: 0; /* Час не стискається */
+        border-right: 2px solid rgba(212, 177, 255, 0.4); /* Створюємо лінію як праву границю */
+        padding-right: 12px; /* Відступи навколо лінії */
+        margin-right: 12px;
+        display: flex; /* Центруємо час по вертикалі відносно довгого опису */
+        align-items: center;
+    }
+/* Блок опису (тепер він буде переноситися) */
+.plan-desc-text {
+    flex: 1; /* Займає все вільне місце */
+    word-break: break-word;
+    white-space: normal; /* Дозволяємо перенос тексту */
+    line-height: 1.4; /* Відстань між рядками для зручності */
+    padding: 2px 0; /* Невеликий відступ зверху/знизу */
+}
+
+/* ---- МОДАЛЬНІ ВІКНА ---- */
+.modal-backdrop-custom {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.modal-box {
+    background: linear-gradient(145deg, #2D1B4E 0%, #3E1671 100%);
+    border: 1.5px solid #B377FD;
+    border-radius: 20px;
+    /* Збільшено padding-top (48px) щоб контент не накладався на хрестик */
+    padding: 48px 38px 30px;
+    min-width: 460px;
+    max-width: 620px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    color: #fff;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(179,119,253,0.15);
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(212,177,255,0.3) transparent;
+}
+
+/* Виправлено позиціонування хрестика закриття модалки */
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 18px;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: color 0.15s, transform 0.15s;
+    padding: 4px 8px;
+    z-index: 10;
+}
+
+    .modal-close:hover {
+        color: #fff;
+        transform: scale(1.15);
+    }
+
+.modal-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.modal-input {
+    width: 100%;
+    background: #5D3292;
+    border: 1.5px solid #B377FD;
+    border-radius: 9px;
+    color: #fff;
+    font-size: 1.1rem;
+    padding: 10px 14px;
+    outline: none;
+    box-sizing: border-box;
+    margin-bottom: 14px;
+    font-family: 'Segoe UI', sans-serif;
+    transition: all 0.15s;
+}
+
+    .modal-input:focus {
+        border-color: #D4B1FF;
+        box-shadow: 0 0 0 3px rgba(212,177,255,0.15);
+    }
+
+    .modal-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .modal-input[type="time"] {
+        color: #e2ccff;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        color-scheme: dark;
+    }
+
+/* 2 — МІТКА «ОПИС» ТА ІНШІ ПІДПИСИ ПОЛІВ
+           Збільшено font-size на 1.1px: 1.2rem → 1.31rem */
+.modal-label {
+    font-size: 1.2rem;
+    color: #EBEBEB;
+    margin-bottom: 6px;
+    display: block;
+    font-weight: 500;
+}
+
+/* 1 — НАЗВА ЗАВДАННЯ У МОДАЛЦІ  */
+#taskModalName {
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+    color: white !important;
+    margin-bottom: 10px !important;
+    /* ПОВНА НЕВИДИМІСТЬ */
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 1.5px solid transparent !important;
+    box-shadow: none !important; /* Прибираємо внутрішню тінь Bootstrap */
+    outline: none !important; /* Прибираємо контур виділення */
+    -webkit-appearance: none; /* Прибираємо системні стилі браузера */
+
+    border-radius: 8px;
+    padding: 4px 8px;
+    transition: all 0.2s ease;
+    width: 100%;
+    cursor: pointer;
+}
+
+    /* СТИЛЬ ПРИ НАТИСКАННІ (ФОКУС) */
+    #taskModalName:focus {
+        background: rgba(255, 255, 255, 0.05) !important; /* Легка підкладка, щоб бачити межі вводу */
+        border: 1.5px solid #D4B1FF !important; /* Ваша фіолетова рамка */
+        box-shadow: 0 0 8px rgba(212, 177, 255, 0.2) !important; /* М'яке сяйво */
+        cursor: text;
+    }
+
+    /* Додатково прибираємо синю рамку, яку додає Chrome */
+    #taskModalName:focus-visible {
+        outline: none !important;
+    }
+
+/* ПАНЕЛЬ ФОРМАТУВАННЯ ТЕКСТУ (B / I / U / S + скріпка)
+           Підкреслена знизу тонкою лінією щоб панель не зливалась з полем опису.
+           border-bottom залишається (border: none тільки знизу між панеллю і полем). */
+.fmt-bar {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    background: #5D3292;
+    border: 1.5px solid #B377FD;
+    border-bottom: 1.5px solid rgba(212, 177, 255, 0.35); /* Роздільник — відокремлює панель від поля опису */
+    border-radius: 9px 9px 0 0;
+    padding: 8px 10px; /* Збільшено padding для більшого вигляду */
+    margin-bottom: 0;
+}
+
+/* КНОПКИ B / I / U / S — збільшено розмір */
+.fmt-btn {
+    background: transparent;
+    border: none;
+    color: #D4B1FF;
+    width: 34px; /* Змінено: було 28px */
+    height: 34px; /* Змінено: було 28px */
+    cursor: pointer;
+    font-size: 1rem; /* Змінено: було 0.84rem */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    transition: background 0.15s;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+    .fmt-btn:hover {
+        background: rgba(255,255,255,0.15);
+        color: #fff;
+    }
+
+/*  КНОПКА СКРІПКИ — збільшено іконку, розміщена у панелі форматування */
+.attach-btn-toolbar {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px; /* Збільшено padding */
+    margin-left: auto; /* Притискає скріпку до правого краю */
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    transition: all 0.15s;
+}
+/* Іконка скріпки — збільшено розмір */
+.custom-paperclip {
+    color: #D4B1FF;
+    font-size: 1.3rem; /* Змінено: було 1.12rem */
+    font-weight: normal;
+    transition: color 0.15s, transform 0.15s;
+}
+
+.attach-btn-toolbar:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+    .attach-btn-toolbar:hover .custom-paperclip {
+        color: #fff;
+    }
+
+#taskFileInput {
+    display: none;
+}
+
+/* ПОЛЕ ВВОДУ ОПИСУ (contenteditable)
+           Збільшено font-size для зручнішого введення тексту */
+.desc-editor {
+    min-height: 100px;
+    background: #5D3292;
+    border: 1.5px solid #B377FD;
+    border-top: none; /* З'єднується з панеллю форматування зверху */
+    border-radius: 0 0 9px 9px;
+    padding: 12px 14px; /* Збільшено padding для комфорту */
+    font-size: 1.05rem; /* Змінено: було 0.88rem — збільшено для зручного вводу */
+    color: #fff;
+    outline: none;
+    font-family: 'Segoe UI', sans-serif;
+    transition: border-color 0.15s;
+    overflow-y: auto;
+    word-break: break-word;
+}
+
+    .desc-editor:focus {
+        border-color: #D4B1FF;
+    }
+
+    .desc-editor:empty::before {
+        content: attr(data-placeholder);
+        color: rgba(255,255,255,0.45);
+        pointer-events: none;
+    }
+
+/* ---- СІТКА ВКЛАДЕНЬ (ГРІД) ---- */
+.attachments-section {
+    margin-top: 12px;
+    display: none;
+}
+
+.attachments-label {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 8px;
+    display: block;
+    font-weight: 500;
+}
+
+.attachments-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+}
+
+.attach-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s;
+}
+
+    .attach-card:hover {
+        border-color: #D4B1FF;
+    }
+
+.attach-thumb {
+    height: 80px;
+    width: 100%;
+    background-color: rgba(0,0,0,0.25);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #D4B1FF;
+    font-size: 1.2rem;
+}
+
+.file-ext {
+    font-size: 0.65rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.2);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 4px;
+    color: #fff;
+}
+
+.attach-info {
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+}
+
+.attach-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #e2d4ff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80px;
+}
+
+.attach-remove {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: color 0.15s;
+}
+
+    .attach-remove:hover {
+        color: #ff6b6b;
+    }
+
+/* ---- КОМЕНТАРІ ---- */
+.comments-section {
+    margin-top: 14px;
+    margin-bottom: 8px;
+}
+
+.comments-toggle {
+    background: transparent;
+    border: none;
+    color: #c4a7f7;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.15s;
+}
+
+    .comments-toggle:hover {
+        color: #e8d5ff;
+    }
+
+.comments-arrow {
+    font-size: 0.72rem;
+    transition: transform 0.2s ease;
+}
+
+.comment-item {
+    background: rgba(255,255,255,0.07);
+    border-radius: 7px;
+    padding: 7px 10px;
+    margin-bottom: 6px;
+    font-size: 1.1rem;
+    color: #e2d9f3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.comment-text-span {
+    flex: 1;
+    word-break: break-word;
+}
+
+.comment-del-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.35);
+    cursor: pointer;
+    padding: 0 2px;
+    transition: color 0.15s;
+    flex-shrink: 0;
+}
+
+    .comment-del-btn:hover {
+        color: #ff6b6b;
+    }
+
+/* 6 — ПОЛЕ ВВОДУ КОМЕНТАРЯ
+           Збільшено font-size для зручного читання та набору */
+.comment-input {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem; /* Змінено: було 0.85rem */
+    padding: 10px 12px; /* Збільшено padding */
+    margin-bottom: 8px;
+    transition: border-color 0.15s;
+    outline: none;
+    font-family: 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+}
+
+    .comment-input:focus {
+        border-color: #9E65E3;
+    }
+
+    .comment-input::placeholder {
+        color: rgba(255, 255, 255, 0.45);
+    }
+
+/* ---- КНОПКИ ДІЙ ---- */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* 8 — КНОПКА «ЗБЕРЕГТИ»  */
+.btn-save {
+    background: #7546AE;
+    border: 1.5px solid #7546AE;
+    border-radius: 9px;
+    color: #fff;
+    font-size: 1rem; /* Змінено: додано явний font-size */
+    padding: 10px 26px; /* Трохи збільшено padding */
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+    transition: all 0.15s;
+}
+
+    .btn-save:hover {
+        background: #9E65E3;
+        border-color: #9E65E3;
+    }
+
+/* 8 — КНОПКА «СКАСУВАТИ» */
+.btn-cancel {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    border-radius: 9px;
+    color: #fff;
+    font-size: 1rem; /* Змінено: додано явний font-size */
+    padding: 10px 22px; /* Трохи збільшено padding */
+    cursor: pointer;
+    font-family: 'Segoe UI', sans-serif;
+    transition: all 0.15s;
+}
+
+    .btn-cancel:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.4);
+    }
+
+/* 8 — КНОПКА «ВИДАЛИТИ» — збільшено font-size */
+.btn-delete {
+    background: rgba(220,38,38,0.15);
+    border: 1.5px solid rgba(220,38,38,0.5);
+    border-radius: 9px;
+    color: #fca5a5;
+    font-size: 1rem; /* Змінено: додано явний font-size */
+    padding: 10px 20px; /* Трохи збільшено padding */
+    cursor: pointer;
+    margin-right: auto;
+    font-family: 'Segoe UI', sans-serif;
+    transition: background 0.15s;
+}
+
+    .btn-delete:hover {
+        background: rgba(220,38,38,0.3);
+    }
+
+/* 7 — КНОПКА «ДОДАТИ» (для коментарів)
+           Вирівняна за розміром з кнопками Видалити/Скасувати/Зберегти */
+.btn-comment-add {
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.25); /* Змінено: 1px → 1.5px для єдиного стилю */
+    border-radius: 9px; /* Змінено: 7px → 9px для єдиного стилю */
+    color: #fff;
+    font-size: 1rem; /* Змінено: додано явний font-size як у btn-save/cancel/delete */
+    padding: 10px 20px; /* Змінено: 9px 20px — такий самий як btn-delete */
+    cursor: pointer;
+    font-family: 'Segoe UI', sans-serif;
+    transition: background 0.15s;
+}
+
+    .btn-comment-add:hover {
+        background: rgba(255,255,255,0.18);
+    }
+
+.time-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+    .time-row .modal-input {
+        flex: 1;
+        margin-bottom: 0;
+    }
+
+.auth-link {
+    color: #D4B1FF;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+    .auth-link:hover {
+        color: #fff;
+    }

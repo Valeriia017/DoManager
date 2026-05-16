@@ -1,0 +1,67 @@
+﻿@model IEnumerable<DoManager.Models.SystemLog>
+@{
+    ViewData["Title"] = "Журнал активності";
+}
+
+<link rel="stylesheet" href="~/css/Admin(Logs).css" />
+<div class="logs-container">
+    <div style="max-width: 1350px; margin: 20px auto 0; padding: 15px 20px;">
+        <a href="/Admin/Index" style="color: #a78bfa; text-decoration: none; font-weight: 700; font-size: 1.2rem; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s;"
+           onmouseover="this.style.color='#fff'; this.style.textShadow='0 0 15px #a78bfa'; this.style.transform='translateX(-3px)';"
+           onmouseout="this.style.color='#a78bfa'; this.style.textShadow='none'; this.style.transform='none';">
+            ← Назад до панелі адміна
+        </a>
+    </div>
+    <h1 class="logs-title">Журнал дій користувачів</h1>
+
+    <div class="logs-card">
+        @if (Model != null && Model.Any())
+        {
+            <table class="logs-table">
+                <thead>
+                    <tr>
+                        <th style="width: 180px;">Дата та час</th>
+                        <th style="width: 250px;">Користувач (Email)</th>
+                        <th style="width: 140px;">Дія</th>
+                        <th>Деталі події</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in Model)
+                    {
+                        // Автоматично підбираємо колір мітки під назву події
+                        string badgeClass = log.Action switch
+                        {
+                            "Login" or "Авторизація" or "Вхід" => "action-login",
+                            "Create" or "Створення" => "action-create",
+                            "Update" or "Редагування" or "Оновлення" => "action-update",
+                            "Delete" or "Видалення" => "action-delete",
+                            _ => "action-default"
+                        };
+
+                        <tr>
+                            <td class="time-col">@log.CreatedAt.ToString("dd.MM.yyyy HH:mm:ss")</td>
+
+                            <td style="font-weight: 600; color: rgba(255,255,255,0.9);">
+                                @(log.User != null ? log.User.Email : (!string.IsNullOrEmpty(log.UserId) ? log.UserId : "Система"))
+                            </td>
+
+                            <td>
+                                <span class="log-badge @badgeClass">@log.Action</span>
+                            </td>
+
+                            <td style="color: rgba(255, 255, 255, 0.85);">@log.Details</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty-logs">
+                <i class="bi bi-journal-x d-block mb-3" style="font-size: 3rem; color: rgba(255,255,255,0.3);"></i>
+                Журнал системних логів поки що порожній.
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,156 @@
+﻿.stats-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.stats-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+}
+
+/* Сітка для карток головних лічильників */
+.stats-main-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+/* Скляна картка статистики */
+.stats-card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+    .stats-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(167, 139, 250, 0.3);
+    }
+
+.stats-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+
+/* Кольорові теми для різних карток */
+.bg-users {
+    background: rgba(52, 152, 219, 0.15);
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.bg-tasks {
+    background: rgba(155, 89, 182, 0.15);
+    color: #9b59b6;
+    border: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+.bg-done {
+    background: rgba(46, 109, 204, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.stats-info h3 {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    margin: 0 0 5px 0;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.stats-number {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 0;
+}
+
+/* Великий блок детального аналізу Kanban */
+.kanban-analysis-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 25px;
+    padding: 35px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+}
+
+.analysis-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 25px;
+    border-left: 4px solid var(--purple-light);
+    padding-left: 12px;
+}
+
+/* Рядки прогрес-барів */
+.progress-item {
+    margin-bottom: 22px;
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 8px;
+}
+
+    .progress-labels span:last-child {
+        color: var(--purple-light);
+        font-weight: 700;
+    }
+
+.custom-progress-bar {
+    height: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Кольори для статусів */
+.fill-draft {
+    background: linear-gradient(90deg, #b388ff, #7c4dff);
+}
+
+.fill-process {
+    background: linear-gradient(90deg, #b388ff, #7c4dff);
+}
+
+.fill-editing {
+    background: linear-gradient(90deg, #b388ff, #7c4dff);
+}
+
+.fill-completed {
+    background: linear-gradient(90deg, #b388ff, #7c4dff);
+}

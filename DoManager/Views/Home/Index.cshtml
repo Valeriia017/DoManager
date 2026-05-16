@@ -1,0 +1,164 @@
+﻿@* Index.cshtml — головна сторінка To-Do List Manager *@
+
+@{
+    ViewData["Title"] = "To-Do List Manager";
+
+    // Перевірка авторизації
+    bool isAuth = User.Identity?.IsAuthenticated ?? false;
+
+    // ОТРИМУЄМО EMAIL ПОТОЧНОГО КОРИСТУВАЧА (якщо він увійшов)
+    string userEmail = isAuth ? (User.Identity.Name ?? "") : "";
+}
+<link rel="stylesheet" href="~/css/Home(Index).css" />
+@* HTML КАРКАС СТОРІНКИ*@
+<div class="kanban-wrapper" id="kanbanWrapper">
+    <!-- Стовпці дошки -->
+    <div class="column" id="col-draft">
+        <div class="column-title">Чернетка</div>
+        <div class="boards-scroll" id="scroll-draft"></div>
+    </div>
+    <div class="column" id="col-inprogress">
+        <div class="column-title">В процесі</div>
+        <div class="boards-scroll" id="scroll-inprogress"></div>
+    </div>
+    <div class="column" id="col-editing">
+        <div class="column-title">Редагування</div>
+        <div class="boards-scroll" id="scroll-editing"></div>
+    </div>
+    <div class="column" id="col-done">
+        <div class="column-title">Готово</div>
+        <div class="boards-scroll" id="scroll-done"></div>
+    </div>
+    <!-- Спеціальний стовпець "План" -->
+    <div class="column-plan" id="col-plan">
+        <div class="column-title">План</div>
+        <div class="board-plan" id="planBoard">
+            <button class="add-plan-btn" onclick="openPlanModal(null)">+ Додати план</button>
+        </div>
+    </div>
+</div>
+
+@* ---- МОДАЛЬНЕ ВІКНО: АВТОРИЗАЦІЯ ---- *@
+<div class="modal-backdrop-custom" id="authModal" style="display:none;" onclick="closeAuthOutside(event)">
+    <div class="modal-box" style="max-width:500px;text-align:center;padding:44px 48px;">
+        <p style="font-size:1.15rem;line-height:1.8;margin:0;">
+            Будь ласка,
+            <a class="auth-link" href="/Account/Login">увійдіть</a> або <a class="auth-link" href="/Account/Register">зареєструйтесь</a> для роботи з дошками.
+        </p>
+    </div>
+</div>
+
+@* ---- МОДАЛЬНЕ ВІКНО: РЕДАГУВАННЯ ЗАВДАННЯ ---- *@
+<div class="modal-backdrop-custom" id="taskModal" style="display:none;" onclick="closeTaskOutside(event)">
+    <div class="modal-box" style="min-width:520px;max-width:620px;">
+        <!-- Кнопка закриття вікна (хрестик) -->
+        <button class="modal-close" onclick="closeTaskModal()" title="Закрити">✕</button>
+
+        <!-- Поле для зміни назви завдання -->
+        <input class="modal-input" id="taskModalName" placeholder="Назва завдання" style="font-size:1.05rem;font-weight:600;margin-bottom:20px;">
+        <label class="modal-label">Опис</label>
+
+        <!-- Панель форматування тексту -->
+        <div class="fmt-bar">
+            <button class="fmt-btn" onclick="fmtText('bold')" title="Жирний"><b>B</b></button>
+            <button class="fmt-btn" onclick="fmtText('italic')" title="Курсив"><i>I</i></button>
+            <button class="fmt-btn" onclick="fmtText('underline')" title="Підкреслення"><u>U</u></button>
+            <button class="fmt-btn" onclick="fmtText('strikeThrough')" title="Закреслення"><s>S</s></button>
+            <!-- Кнопка додавання файлу. Залишено лише один символ скріпки (емодзі) -->
+            <button class="attach-btn-toolbar" onclick="document.getElementById('taskFileInput').click()" title="Прикріпити файл або зображення">
+                <i class="bi bi-paperclip custom-paperclip"></i>
+            </button>
+        </div>
+
+        <input type="file" multiple accept="*/*" id="taskFileInput" onchange="handleFileAttach(event)">
+        <!-- Поле опису (Rich Text) -->
+        <div class="desc-editor" id="taskDescEditor" contenteditable="true" data-placeholder="Додати докладніший опис..."></div>
+
+        <!-- Секція сітки вкладень -->
+        <div class="attachments-section" id="attachmentsSection">
+            <label class="attachments-label">Вкладення</label>
+            <div class="attachments-list" id="attachmentsList"></div>
+        </div>
+
+        <!-- Секція коментарів -->
+        <div class="comments-section">
+            <button class="comments-toggle" onclick="toggleComments()">
+                <span>Коментарі</span>
+                <span id="commentCount">(0)</span>
+                <span class="comments-arrow" id="commentArrow">▼</span>
+            </button>
+            <div id="commentsBody">
+                <div id="commentsList"></div>
+                <input class="comment-input" id="newCommentInput" placeholder="Додати коментар...">
+                <button class="btn-comment-add" onclick="addComment()">Додати</button>
+            </div>
+        </div>
+
+        <!-- Кнопки керування завданням -->
+        <div class="modal-actions">
+            <button class="btn-delete" onclick="deleteCurrentTask()">Видалити</button>
+            <button class="btn-cancel" onclick="closeTaskModal()">Скасувати</button>
+            <button class="btn-save" onclick="saveTaskModal()">Зберегти</button>
+        </div>
+    </div>
+</div>
+
+@* ---- МОДАЛЬНЕ ВІКНО: ДОДАВАННЯ/РЕДАГУВАННЯ ПЛАНУ ---- *@
+<div class="modal-backdrop-custom" id="planModal" style="display:none;" onclick="closePlanOutside(event)">
+    <div class="modal-box" style="min-width:440px;max-width:500px;">
+        <button class="modal-close" onclick="closePlanModal()" title="Закрити">✕</button>
+        <div class="modal-title">Час</div>
+        <div class="time-row">
+            <input class="modal-input" type="time" id="planStart">
+            <input class="modal-input" type="time" id="planEnd">
+        </div>
+        <label class="modal-label">Опис</label>
+        <!-- autocomplete="off" — вимикає підказки браузера з попередніх введень -->
+        <input class="modal-input" id="planDesc" placeholder="Введіть опис..." autocomplete="off">
+        <div class="modal-actions">
+            <button class="btn-delete" id="planDeleteBtn" onclick="deletePlan()" style="display:none;">Видалити</button>
+            <button class="btn-cancel" onclick="closePlanModal()">Скасувати</button>
+            <button class="btn-save" id="planSaveBtn" onclick="savePlan()">Додати</button>
+        </div>
+    </div>
+</div>
+@* ---- Модальне вікно підтвердження видалення ---- *@
+<div class="modal-backdrop-custom" id="deleteBoardConfirmModal" style="display:none;" onclick="closeDeleteBoardOutside(event)">
+    <div class="modal-box" style="width: 440px; text-align: center;">
+        <button class="modal-close" onclick="closeDeleteBoardModal()" title="Закрити">✕</button>
+        
+        <div class="modal-title">Підтвердження</div>
+        
+        <p style="color: #D4B1FF; font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px;">
+            Ви впевнені, що хочете видалити цю дошку?<br>
+            <span style="font-size: 1rem; opacity: 0.7;">Усі завдання всередині будуть видалені назавжди.</span>
+        </p>
+
+        <div class="modal-actions" style="justify-content: center; gap: 15px;">
+            @* Використовуємо ваші класи btn-delete та btn-cancel для стилістики *@
+            <button class="btn-delete" id="confirmDeleteBoardBtn" style="padding: 10px 25px;">Видалити</button>
+            <button class="btn-cancel" onclick="closeDeleteBoardModal()" style="padding: 10px 25px;">Скасувати</button>
+        </div>
+    </div>
+</div>
+
+@* JAVASCRIPT ТА БІБЛІОТЕКИ *@
+@section Scripts {
+    <!-- Бібліотека DOMPurify для захисту від XSS-атак у полі "Опис" -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.3/purify.min.js"></script>
+    
+    <!-- Поліфіл для роботи Drag & Drop на сенсорних (мобільних) екранах -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/default.css">
+    <script src="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/scroll-behaviour.min.js"></script>
+
+    <script>
+        window.KanbanConfig = {
+        isAuth: @(isAuth ? "true" : "false"),
+        userEmail: '@userEmail'
+        };
+    </script>
+
+    <script src="~/js/home-index.js"></script>
+    
+}

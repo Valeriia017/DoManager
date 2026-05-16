@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "Статистика системи";
+}
+<link rel="stylesheet" href="~/css/Admin(Statistics).css" />
+<div class="stats-container">
+    <div style="max-width: 1350px; margin: 20px auto 0; padding: 15px 20px;">
+        <a href="/Admin/Index" style="color: #a78bfa; text-decoration: none; font-weight: 700; font-size: 1.2rem; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s;"
+           onmouseover="this.style.color='#fff'; this.style.textShadow='0 0 15px #a78bfa'; this.style.transform='translateX(-3px)';"
+           onmouseout="this.style.color='#a78bfa'; this.style.textShadow='none'; this.style.transform='none';">
+            ← Назад до панелі адміна
+        </a>
+    </div>
+    <h1 class="stats-title">Аналітика системи</h1>
+
+    <div class="stats-main-grid">
+        <div class="stats-card">
+            <div class="stats-icon-wrapper bg-users">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div class="stats-info">
+                <h3>Всього користувачів</h3>
+                <p class="stats-number">@ViewBag.TotalUsers</p>
+            </div>
+        </div>
+
+        <div class="stats-card">
+            <div class="stats-icon-wrapper bg-tasks">
+                <i class="bi bi-clipboard-data-fill"></i>
+            </div>
+            <div class="stats-info">
+                <h3>Створено завдань</h3>
+                <p class="stats-number">@ViewBag.TotalTasks</p>
+            </div>
+        </div>
+
+        <div class="stats-card">
+            <div class="stats-icon-wrapper bg-done">
+                <i class="bi bi-check2-circle"></i>
+            </div>
+            <div class="stats-info">
+                <h3>Успішно виконано</h3>
+                <p class="stats-number">@ViewBag.CompletedTasks</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="kanban-analysis-card">
+        <h2 class="analysis-title">Розподіл завдань по дошках</h2>
+
+        @{
+            // 1. БЕРЕМО РЕАЛЬНІ ЦИФРИ З БАЗИ ДАНИХ (ніяких більше фейкових відсотків!)
+            int totalCreated = ViewBag.TotalTasks != null ? ViewBag.TotalTasks : 0;
+            int completed = ViewBag.CompletedTasks != null ? ViewBag.CompletedTasks : 0;
+
+            int draftTasks = ViewBag.DraftTasks != null ? ViewBag.DraftTasks : 0;
+            int inProcessTasks = ViewBag.InProcessTasks != null ? ViewBag.InProcessTasks : 0;
+            int editingTasks = ViewBag.EditingTasks != null ? ViewBag.EditingTasks : 0;
+
+            // 2. Захист від ділення на нуль
+            int divisor = totalCreated > 0 ? totalCreated : 1;
+
+            // 3. Вираховуємо точні відсотки
+            double draftPercent = ((double)draftTasks / divisor) * 100;
+            double processPercent = ((double)inProcessTasks / divisor) * 100;
+            double editingPercent = ((double)editingTasks / divisor) * 100;
+            double completedPercent = ((double)completed / divisor) * 100;
+        }
+
+        <div class="progress-item">
+            <div class="progress-labels">
+                <span>Чернетка (Draft)</span>
+                <span>@draftTasks з @totalCreated (@Math.Round(draftPercent, 1)%)</span>
+            </div>
+            <div class="custom-progress-bar">
+                <div class="progress-fill fill-draft" style="width: @(totalCreated > 0 ? draftPercent.ToString().Replace(",", ".") : "0")%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-labels">
+                <span>В процесі (In Progress)</span>
+                <span>@inProcessTasks з @totalCreated (@Math.Round(processPercent, 1)%)</span>
+            </div>
+            <div class="custom-progress-bar">
+                <div class="progress-fill fill-process" style="width: @(totalCreated > 0 ? processPercent.ToString().Replace(",", ".") : "0")%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-labels">
+                <span>Редагування (Editing)</span>
+                <span>@editingTasks з @totalCreated (@Math.Round(editingPercent, 1)%)</span>
+            </div>
+            <div class="custom-progress-bar">
+                <div class="progress-fill fill-editing" style="width: @(totalCreated > 0 ? editingPercent.ToString().Replace(",", ".") : "0")%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-labels">
+                <span>Виконано (Done)</span>
+                <span>@completed з @totalCreated (@Math.Round(completedPercent, 1)%)</span>
+            </div>
+            <div class="custom-progress-bar">
+                <div class="progress-fill fill-completed" style="width: @(totalCreated > 0 ? completedPercent.ToString().Replace(",", ".") : "0")%"></div>
+            </div>
+        </div>
+    </div>
+</div>

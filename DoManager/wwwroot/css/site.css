@@ -1,0 +1,112 @@
+:root {
+    --purple-light: #a78bfa;
+    --dark-bg: #0f0f1e;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+    /*  задній фон */
+    body::before {
+        content: "";
+        position: fixed;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 20% 30%, #2d1b4e 0%, transparent 40%), radial-gradient(circle at 80% 70%, #3e1671 0%, transparent 40%), radial-gradient(circle at 50% 50%, #16162d 0%, transparent 100%);
+        z-index: -1;
+    }
+
+@@keyframes moveGradient {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(5deg);
+    }
+}
+
+.main-header {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.user-name-display {
+    font-size: 1.3rem;
+    color: #e2e8f0;
+    font-weight: 500;
+}
+
+.user-profile-icon {
+    font-size: 2.5rem;
+    color: var(--purple-light);
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+    .user-profile-icon:hover {
+        color: var(--purple-light);
+        filter: drop-shadow(0 0 10px var(--purple-light));
+        transform: scale(1.05);
+    }
+/* ---- СТИЛІЗАЦІЯ ВИПАДАЮЧОГО МЕНЮ (БЕЗ ЗМІЩЕННЯ) ---- */
+.dropdown-menu-dark {
+    background: rgba(30, 20, 50, 0.9) !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    border-radius: 12px;
+    padding: 8px;
+    margin-top: 10px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    min-width: 180px;
+}
+
+.dropdown-item {
+    color: #e2e8f0 !important;
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: background 0.2s, color 0.2s; /* Анімація тільки для кольору */
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+    /* Ефект тільки кольором */
+    .dropdown-item:hover {
+        background: rgba(167, 139, 250, 0.15) !important;
+        color: #fff !important;
+        /* transform видалено, щоб текст не рухався */
+    }
+
+    /* Ефект для кнопки виходу */
+    .dropdown-item.text-danger:hover {
+        background: rgba(255, 107, 107, 0.1) !important;
+        color: #ff6b6b !important;
+    }
+
+.dropdown-divider {
+    border-top: 1px solid rgba(167, 139, 250, 0.2);
+    margin: 6px 10px;
+}

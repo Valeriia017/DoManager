@@ -1,0 +1,242 @@
+﻿/*  ОСНОВНИЙ КОНТЕЙНЕР  */
+.users-container {
+    max-width: 1350px; /* Збільшено ширину блоку, щоб прибрати тісноту */
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/*  ГОЛОВНИЙ ЗАГОЛОВОК  */
+.users-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+}
+
+/*  СКЛЯНА ОБОРТКА ТАБЛИЦІ  */
+.table-responsive-wrapper {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/*  СТИЛІЗАЦІЯ ТАБЛИЦІ  */
+.custom-table {
+    width: 100%;
+    color: #FFFFFF;
+    border-collapse: separate;
+    border-spacing: 0 10px; /* Відступи між рядками */
+}
+
+    /* Заголовки колонок — СТРОГО ПО ЦЕНТРУ */
+    .custom-table th {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--purple-light, #a78bfa);
+        padding: 15px 20px;
+        border-bottom: 2px solid rgba(167, 139, 250, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-align: center;
+    }
+
+    /* Вміст комірок — ПО ЛІВОМУ КРАЮ (крім колонки дій та статусу) */
+    .custom-table td {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 18px 25px; /* Збільшено відступи всередині */
+        font-size: 1.1rem;
+        vertical-align: middle;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        text-align: left; /* Вирівнювання по лівій стороні за зауваженням */
+    }
+
+        /* Окремо центруємо колонку дій та колонку статусів */
+        .custom-table td.text-center-col,
+        .custom-table th.text-center-col {
+            text-align: center;
+        }
+
+        /* Заокруглення кутів для кожного рядка */
+        .custom-table td:first-child {
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .custom-table td:last-child {
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+    /* Ефект підсвічування рядка при наведенні */
+    .custom-table tr:hover td {
+        background: rgba(167, 139, 250, 0.1);
+        border-color: rgba(167, 139, 250, 0.3);
+    }
+
+/*  АДМІНІСТРАТИВНІ СТАТУСИ  */
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 15px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.status-active {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.4);
+}
+
+.status-blocked {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.4);
+}
+
+/*  КОНТЕЙНЕР ДЛЯ КНОПОК ДІЙ  */
+/* ---- КОНТЕЙНЕР ДЛЯ КНОПОК ДІЙ ---- */
+.actions-flex {
+    display: flex;
+    flex-direction: row; /* Елементи розташовані строго горизонтально в один ряд */
+    align-items: center; /* Вирівнювання чітко по центру по вертикалі */
+    justify-content: center; /* Центрування всього рядка в стовпчику */
+    gap: 15px; /* Фіксована відстань між кнопками, щоб вони не злипалися */
+    width: 100%;
+}
+
+/* ---- ФІКСОВАНА ШИРИНА ДЛЯ ОДНАКОВОСТІ ---- */
+/* Задаємо кнопкам однаковий розмір, не змінюючи ваші оригінальні кольори та рамки */
+.manage-btn, .delete-user-btn, .main-admin-badge {
+    width: 140px; /* Всі кнопки стають абсолютно однакової ширини */
+    text-align: center;
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+/* ---- КНОПКА КЕРУВАТИ (Ваш оригінальний стиль) ---- */
+.manage-btn {
+    background: #7c3aed !important;
+    padding: 8px 20px;
+    font-size: 1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+    .manage-btn:hover {
+        box-shadow: 0 0 15px rgba(124, 58, 237, 0.6);
+        transform: translateY(-1px);
+    }
+
+/* ---- КНОПКА ВИДАЛИТИ (Ваш оригінальний стиль із прозорою рамкою) ---- */
+.delete-user-btn {
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.3); /* Повернули оригінальну рамку */
+    padding: 8px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+    .delete-user-btn:hover {
+        background: #ff6b6b;
+        color: white;
+        box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+        transform: translateY(-1px);
+    }
+
+/* ---- ФІОЛЕТОВИЙ БЕЙДЖ ГОЛОВНОГО АДМІНА ---- */
+.main-admin-badge {
+    background: rgba(124, 58, 237, 0.15);
+    color: #c084fc;
+    border: 1px solid rgba(124, 58, 237, 0.4);
+    padding: 8px 0; /* Вертикальний відступ для вирівнювання висоти */
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: normal; /* Текст стоїть рівно по центру */
+}
+
+/* СТИЛІ ДЛЯ МОДАЛЬНОГО ВІКНА (У СТИЛІ INDEX.CSHTML) */
+.modal-box {
+    background: linear-gradient(145deg, #2D1B4E 0%, #3E1671 100%) !important;
+    border: 1.5px solid #B377FD !important;
+    border-radius: 20px !important;
+    /* Великі паддінги з вашого дизайну для красивих відступів */
+    padding: 48px 38px 30px !important;
+    min-width: 460px;
+    max-width: 620px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    color: #ffffff !important;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 40px rgba(179,119,253,0.2) !important;
+    box-sizing: border-box;
+}
+
+    /* Налаштування скроллбару всередині модального вікна, якщо текст великий */
+    .modal-box::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .modal-box::-webkit-scrollbar-thumb {
+        background: rgba(212, 177, 255, 0.3);
+        border-radius: 10px;
+    }
+
+/* ---- СТИЛІ ДЛЯ КНОПОК У МОДАЛЬНОМУ ВІКНІ ---- */
+
+/* Кнопка "Скасувати" */
+.btn-modal-cancel {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    padding: 10px 24px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+}
+
+    .btn-modal-cancel:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+/* Кнопка "Видаляти" */
+.btn-modal-delete {
+    background: rgba(255, 107, 107, 0.15) !important;
+    color: #ff6b6b !important;
+    border: 1px solid rgba(255, 107, 107, 0.4) !important;
+    padding: 10px 24px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer;
+}
+
+    .btn-modal-delete:hover {
+        background: #ff6b6b !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 20px rgba(255, 107, 107, 0.6) !important;
+        transform: translateY(-1px);
+    }

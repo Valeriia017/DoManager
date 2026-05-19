@@ -37,7 +37,7 @@ form.onsubmit = function (e) {
     const pass1 = document.getElementById('pass1');
     const pass2 = document.getElementById('pass2');
 
-    if (!email.value.includes('@@')) {
+    if (!email.value.includes('@')) {
         document.getElementById('email-error').style.display = "block";
         isValid = false;
     }

@@ -40,22 +40,22 @@ namespace DoManager.Controllers
         }
 
         // 3. Сторінка статистики
-        public async Task<IActionResult> Statistics()
-        {
-            var users = await _userManager.Users.ToListAsync();
+public async Task<IActionResult> Statistics()
+{
+    var users = await _userManager.Users.ToListAsync();
 
-            ViewBag.TotalUsers = users.Count;
-            ViewBag.TotalTasks = users.Sum(u => u.CreatedTasksCount);
-            ViewBag.CompletedTasks = users.Sum(u => u.CompletedTasksCount);
+    ViewBag.TotalUsers = users.Count;
+    ViewBag.TotalTasks = users.Sum(u => u.CreatedTasksCount);
+    
+    // ВАЖЛИВО: Використовуй ті самі назви, що й у View
+    ViewBag.CompletedTasks = users.Sum(u => u.DoneTasksCount); // Рахуємо як DoneTasks
 
-            // Тепер зчитуємо абсолютно всі 4 колонки з бази даних!
-            ViewBag.DraftTasks = users.Sum(u => u.DraftTasksCount);
-            ViewBag.InProcessTasks = users.Sum(u => u.InProcessTasksCount);
-            ViewBag.EditingTasks = users.Sum(u => u.EditingTasksCount);
-            ViewBag.DoneTasks = users.Sum(u => u.DoneTasksCount); // <--- Четверта колонка
+    ViewBag.DraftTasks = users.Sum(u => u.DraftTasksCount);
+    ViewBag.InProcessTasks = users.Sum(u => u.InProcessTasksCount);
+    ViewBag.EditingTasks = users.Sum(u => u.EditingTasksCount);
 
-            return View();
-        }
+    return View();
+}
 
         // Реалізація видалення користувача з підтвердженням
         [HttpPost]

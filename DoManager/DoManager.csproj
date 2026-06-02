@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-DoManager-93c3b45d-9b32-4a89-a374-0d00a8a7dfea</UserSecretsId>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

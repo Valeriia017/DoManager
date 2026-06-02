@@ -240,3 +240,16 @@
         box-shadow: 0 0 20px rgba(255, 107, 107, 0.6) !important;
         transform: translateY(-1px);
     }
+
+/* ---- ФОН (ОВЕРЛЕЙ) МОДАЛЬНОГО ВІКНА  ---- */
+.modal-backdrop {
+    /* Робимо фон напівпрозорим темним (можете змінювати 0.5 на інше значення) */
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    /* Додаємо ефект розмиття (матове скло) */
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important; /* Обов'язково для Safari */
+}
+
+    .modal-backdrop.show {
+        opacity: 1 !important;
+    }

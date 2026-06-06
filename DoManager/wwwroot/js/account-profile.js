@@ -97,8 +97,21 @@ async function submitNameChange() {
     if (data.success) {
         statusMsg.style.color = '#2ecc71'; // Насичений зелений для успіху
 
-        // Оновлюємо ім'я у верхньому блоці без перезавантаження
-        document.getElementById('displayFullName').innerText = document.getElementById('inputFullName').value;
+        // Беремо нове ім'я прямо з форми (шукаємо input з name="fullName")
+        const newName = form.querySelector('input[name="fullName"]').value;
+
+        // 1. Оновлюємо ім'я у картці профілю
+        const profileNameSpan = document.getElementById('displayFullName');
+        if (profileNameSpan) {
+            profileNameSpan.innerText = newName;
+        }
+
+        // 2. Оновлюємо ім'я у шапці сайту
+        const headerNameSpan = document.getElementById('headerUserFullName');
+        if (headerNameSpan) {
+            headerNameSpan.innerText = newName;
+        }
+
     } else {
         statusMsg.style.color = '#ff6b6b'; // Червоний для помилки
     }

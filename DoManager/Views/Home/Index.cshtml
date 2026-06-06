@@ -6,7 +6,7 @@
     // Перевірка авторизації
     bool isAuth = User.Identity?.IsAuthenticated ?? false;
 
-    // ОТРИМУЄМО EMAIL ПОТОЧНОГО КОРИСТУВАЧА (якщо він увійшов)
+    // ОТРИМУЄМО ПОТОЧНОГО КОРИСТУВАЧА (якщо він увійшов)
     string userEmail = isAuth ? (User.Identity.Name ?? "") : "";
 }
 <link rel="stylesheet" href="~/css/Home(Index).css" />

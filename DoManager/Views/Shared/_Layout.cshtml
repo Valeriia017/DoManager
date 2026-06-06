@@ -23,7 +23,7 @@
                 // 2. Беремо його FullName (якщо імені немає - покаже Email)
                 var displayName = currentUser?.FullName ?? User.Identity.Name;
 
-                <span class="user-name-display d-none d-md-block">@displayName</span>
+                <span id="headerUserFullName" class="user-name-display d-none d-md-block">@displayName</span>
 
                 <div class="dropdown">
                     <i class="bi bi-person-circle user-profile-icon" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;"></i>

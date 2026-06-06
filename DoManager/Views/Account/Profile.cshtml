@@ -82,20 +82,26 @@
         <div class="field-group">
             <div class="field-label">Пароль</div>
             <div class="field-hint" style="color: #B397D4;">Змінити пароль</div>
-            <form id="changePasswordForm">
+            <form id="changePasswordForm" autocomplete="off">
                 @Html.AntiForgeryToken()
+
+                <input type="email" name="fake_email" style="opacity: 0; position: absolute; top: -9999px; z-index: -1;" tabindex="-1" aria-hidden="true" />
+                <input type="password" name="fake_password" style="opacity: 0; position: absolute; top: -9999px; z-index: -1;" tabindex="-1" aria-hidden="true" />
+
                 <div class="password-wrapper-profile">
-                    <input class="input" style="max-width: 350px; margin-bottom: 15px;" type="password" id="currentPass" name="currentPassword" placeholder="Поточний пароль" />
+                    <input class="input" style="max-width: 350px; margin-bottom: 15px;" type="password" id="currentPass" name="currentPassword" placeholder="Поточний пароль" autocomplete="new-password" />
                     <i class="bi bi-eye password-toggle-profile" onclick="togglePass('currentPass', this)"></i>
                     <div id="error-currentPassword" class="profile-error-message"></div>
                 </div>
+
                 <div class="password-wrapper-profile">
-                    <input class="input" style="max-width: 350px; margin-bottom: 15px;" type="password" id="newPass" name="newPassword" placeholder="Новий пароль" />
+                    <input class="input" style="max-width: 350px; margin-bottom: 15px;" type="password" id="newPass" name="newPassword" placeholder="Новий пароль" autocomplete="new-password" />
                     <i class="bi bi-eye password-toggle-profile" onclick="togglePass('newPass', this)"></i>
                     <div id="error-newPassword" class="profile-error-message"></div>
                 </div>
+
                 <div class="password-wrapper-profile">
-                    <input class="input" style="max-width: 350px; margin-bottom: 15px;" type="password" id="confirmPass" name="confirmPassword" placeholder="Підтвердження пароля" />
+                    <input class="input" style="max-width: 350px; margin-bottom: 15px;" type="password" id="confirmPass" name="confirmPassword" placeholder="Підтвердження пароля" autocomplete="new-password" />
                     <i class="bi bi-eye password-toggle-profile" onclick="togglePass('confirmPass', this)"></i>
                     <div id="error-confirmPassword" class="profile-error-message"></div>
                 </div>

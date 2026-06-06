@@ -1,4 +1,13 @@
-﻿/* :root - це глобальні змінні CSS. Зручно використовувати, щоб в одному місці міняти кольори для всього сайту */
+﻿/* ПОВЕРНУТО ПРОЗОРІСТЬ ТА ФІКС РОЗМІРУ */
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
+    -webkit-text-fill-color: white !important;
+    font-size: 1.1rem !important;
+    font-family: 'Segoe UI', Roboto, sans-serif !important;
+    /* Цей перехід зберігає твою прозорість фону */
+    transition: background-color 9999999s ease-in-out 0s, color 9999999s ease-in-out 0s !important;
+    background-color: transparent !important;
+}
+/* :root - це глобальні змінні CSS. Зручно використовувати, щоб в одному місці міняти кольори для всього сайту */
 :root {
     --bg-card: #7546AE4D; /* Фон для карток (профілю та налаштувань) */
     --bg-input: #5D3292; /* Фон для полів вводу */

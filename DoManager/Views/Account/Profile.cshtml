@@ -51,6 +51,7 @@
 
         <div class="field-group">
             <div class="field-label">Повне ім'я</div>
+            <div class="field-hint">Змінити ваше ім'я та прізвище</div>
             <form id="updateNameForm" class="form-row">
                 @Html.AntiForgeryToken()
                 <input class="input" type="text" name="fullName" value="@Model.FullName" placeholder="Введіть ваше повне ім'я" />

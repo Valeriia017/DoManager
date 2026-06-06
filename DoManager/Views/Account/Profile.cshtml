@@ -24,8 +24,8 @@
         <div class="vertical-divider"></div>
 
         <div class="profile-info">
-            <div class="profile-info__row"><strong>Повне ім'я:</strong> @Model.FullName</div>
-            <div class="profile-info__row"><strong>Пошта:</strong> @Model.Email</div>
+            <div class="profile-info__row"><strong>Повне ім'я:</strong> <span id="displayFullName">@Model.FullName</span></div>
+            <div class="profile-info__row"><strong>Пошта:</strong> <span id="displayEmail">@Model.Email</span></div>
             <div class="profile-info__row">
                 <strong>Роль:</strong>
                 @if (User.IsInRole("Admin"))
@@ -54,7 +54,7 @@
             <div class="field-hint">Змінити ваше ім'я та прізвище</div>
             <form id="updateNameForm" class="form-row">
                 @Html.AntiForgeryToken()
-                <input class="input" type="text" name="fullName" value="@Model.FullName" placeholder="Введіть ваше повне ім'я" />
+                <input id="inputFullName" class="input" type="text" name="fullName" value="@Model.FullName" placeholder="Введіть ваше повне ім'я" />
                 <button type="button" onclick="submitNameChange()" class="btn btn--primary">Оновити</button>
             </form>
             <div id="nameStatusMessage" class="profile-inline-message"></div>
@@ -67,7 +67,7 @@
             <div class="field-hint">Змінити ваш email</div>
             <form id="updateEmailForm">
                 @Html.AntiForgeryToken()
-                <input class="input" style="max-width: 350px;" type="email" name="newEmail" value="@Model.Email" placeholder="Введіть ваш email" />
+                <input id="inputEmail" class="input" style="max-width: 350px;" type="email" name="newEmail" value="@Model.Email" placeholder="Введіть ваш email" />
                 <div class="btn-row">
                     <button type="button" onclick="submitEmailChange()" class="btn btn--primary">Оновити email</button>
                     <button type="button" class="btn btn--secondary" onclick="verifyEmail()">Підтвердити пошту</button>

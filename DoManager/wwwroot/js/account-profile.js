@@ -96,6 +96,9 @@ async function submitNameChange() {
     // Змінюємо колір залежно від результату
     if (data.success) {
         statusMsg.style.color = '#2ecc71'; // Насичений зелений для успіху
+
+        // Оновлюємо ім'я у верхньому блоці без перезавантаження
+        document.getElementById('displayFullName').innerText = document.getElementById('inputFullName').value;
     } else {
         statusMsg.style.color = '#ff6b6b'; // Червоний для помилки
     }
@@ -122,6 +125,9 @@ async function submitEmailChange() {
 
     if (data.success) {
         statusMsg.style.color = '#2ecc71'; // Зелений
+
+        // Оновлюємо пошту у верхньому блоці без перезавантаження
+        document.getElementById('displayEmail').innerText = document.getElementById('inputEmail').value;
     } else {
         statusMsg.style.color = '#ff6b6b'; // Червоний
     }

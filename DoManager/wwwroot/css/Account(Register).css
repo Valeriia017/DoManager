@@ -209,3 +209,19 @@ h2 {
         text-decoration: none;
         font-weight: 700;
     }
+
+/* Стиль для помилок сервера (ідентичний до .error-hint) */
+.server-errors {
+    color: var(--error-red);
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-top: 8px;
+    margin-bottom: 15px;
+    text-align: left; 
+}
+
+    .server-errors ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }

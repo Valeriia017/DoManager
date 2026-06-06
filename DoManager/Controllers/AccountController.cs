@@ -74,9 +74,33 @@ namespace DoManager.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
+                // ПЕРЕКЛАДАЄМО ПОМИЛКИ НА УКРАЇНСЬКУ (якщо пароль занадто легкий)
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    string errorMsg = error.Description;
+
+                    if (errorMsg.Contains("Passwords must be at least") || errorMsg.Contains("6 characters"))
+                    {
+                        errorMsg = "Пароль має бути не коротшим за 6 символів.";
+                    }
+                    else if (errorMsg.Contains("Passwords must have at least one non alphanumeric character"))
+                    {
+                        errorMsg = "Пароль повинен містити хоча б один спеціальний символ (наприклад: @, #, !).";
+                    }
+                    else if (errorMsg.Contains("Passwords must have at least one digit"))
+                    {
+                        errorMsg = "Пароль повинен містити хоча б одну цифру ('0'-'9').";
+                    }
+                    else if (errorMsg.Contains("Passwords must have at least one uppercase"))
+                    {
+                        errorMsg = "Пароль повинен містити великі літери (A-Z).";
+                    }
+                    else if (errorMsg.Contains("Passwords must have at least one lowercase"))
+                    {
+                        errorMsg = "Пароль повинен містити малі літери (a-z).";
+                    }
+
+                    ModelState.AddModelError(string.Empty, errorMsg);
                 }
             }
 
@@ -96,12 +120,39 @@ namespace DoManager.Controllers
         {
             if (ModelState.IsValid)
             {
+                // 1. Спочатку просто шукаємо користувача за поштою
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    // 2. ПЕРЕВІРКА СТАТУСУ: Якщо статус "Blocked" (або як він у вас називається)
+                    // Увага: перевірте, яке саме слово ви зберігаєте в БД (Blocked, Banned, Заблокований тощо)
+                    if (user.UserStatus == "Blocked")
+                    {
+                        // Додаємо помилку, яка виведеться на формі червоним текстом
+                        ModelState.AddModelError(string.Empty, "Цей профіль тимчасово недоступний.");
+
+                        // Записуємо спробу входу заблокованого юзера в Журнал (це буде плюсом на захисті!)
+                        var banLog = new SystemLog
+                        {
+                            Action = "Спроба входу",
+                            Details = $"Заблокований користувач {model.Email} намагався увійти в систему.",
+                            CreatedAt = DateTime.Now,
+                            UserId = user.Id
+                        };
+                        _context.SystemLogs.Add(banLog);
+                        await _context.SaveChangesAsync();
+
+                        return View(model); // Повертаємо на сторінку входу з помилкою
+                    }
+                }
+
+                // 3. Якщо користувач не заблокований - перевіряємо пароль і пускаємо
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
 
                 if (result.Succeeded)
                 {
-                    // ЗАПИС У ЖУРНАЛ: Шукаємо користувача, який увійшов
-                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    // Ваш існуючий код для запису успішного входу в журнал...
                     if (user != null)
                     {
                         var log = new SystemLog
@@ -109,10 +160,10 @@ namespace DoManager.Controllers
                             Action = "Вхід",
                             Details = $"Користувач успішно увійшов у систему.",
                             CreatedAt = DateTime.Now,
-                            UserId = user.Id // Передаємо Id згідно з вашою моделлю SystemLog
+                            UserId = user.Id
                         };
                         _context.SystemLogs.Add(log);
-                        await _context.SaveChangesAsync(); // Зберігаємо в таблицю dbo.SystemLogs
+                        await _context.SaveChangesAsync();
                     }
 
                     return RedirectToAction("Index", "Home");

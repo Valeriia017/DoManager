@@ -52,3 +52,13 @@ form.onsubmit = function (e) {
         return false;
     }
 };
+
+// Автоматично ховаємо помилки від сервера, як тільки користувач починає вводити новий текст
+document.querySelectorAll('.form-control-custom').forEach(function (input) {
+    input.addEventListener('input', function () {
+        let serverErrors = document.querySelector('.server-errors');
+        if (serverErrors) {
+            serverErrors.style.display = 'none';
+        }
+    });
+});

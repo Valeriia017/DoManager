@@ -23,6 +23,14 @@ input:-webkit-autofill:active {
     --error-red: #ff6b6b;
 }
 
+/* 1. Для комп'ютерів */
+@media (min-width: 768px) {
+    body {
+        zoom: 0.8 !important;
+        min-height: 125vh !important;
+    }
+}
+
 body {
     margin: 0;
     padding: 0;

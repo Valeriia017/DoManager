@@ -11,7 +11,13 @@ body {
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
-    zoom: 0.8;
+}
+
+/* 1. Для комп'ютерів */
+@media (min-width: 768px) {
+    body {
+        zoom: 0.8 !important;
+    }
 }
 
     /*  задній фон */

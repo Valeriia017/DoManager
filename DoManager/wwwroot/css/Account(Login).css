@@ -16,6 +16,14 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
     --input-border: rgba(255, 255, 255, 0.15);
 }
 
+/* 1. Для комп'ютерів  */
+@media (min-width: 768px) {
+    body {
+        zoom: 0.8 !important;
+        min-height: 125vh !important;
+    }
+}
+
 body {
     margin: 0;
     min-height: 100vh;
